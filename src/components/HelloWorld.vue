@@ -33,28 +33,22 @@ export default {
         container: vtkContainer.value! as HTMLElement,
       });
       const coneSource = vtkConeSource.newInstance({ height: 1.0 });
-
       const mapper = vtkMapper.newInstance();
       mapper.setInputConnection(coneSource.getOutputPort());
-
       const actor = vtkActor.newInstance();
       actor.setMapper(mapper);
-
       const renderer = fullScreenRenderer.getRenderer();
       const renderWindow = fullScreenRenderer.getRenderWindow();
-
       renderer.addActor(actor);
       renderer.resetCamera();
       renderWindow.render();
 
-
-      // 
+      // annotated cube widget
       const cube = vtkAnnotatedCubeActor.newInstance()
       const widget = vtkInteractiveOrientationWidget.newInstance()
       widget.placeWidget(cube.getBounds())
       widget.setBounds(cube.getBounds().map((v) => v * 1.025))
       widget.setPlaceFactor(1)
-
       const interactor = fullScreenRenderer.getRenderWindow().getInteractor();
       const orientationWidget = vtkOrientationMarkerWidget.newInstance({
         actor: cube, interactor: interactor
@@ -65,17 +59,12 @@ export default {
         edgeThickness: 0.1,
         resolution: 400
       });
-
       orientationWidget.setEnabled(true)
-
-
       const widgetManager = vtkWidgetManager.newInstance({});
       widgetManager.setRenderer(orientationWidget.getRenderer());
-      const vw = widgetManager.addWidget(widget);
-      widgetManager.enablePicking()
+      widgetManager.addWidget(widget);
+      widgetManager.enablePicking() // <---
       renderWindow.render()
-
-
 
     });
 
